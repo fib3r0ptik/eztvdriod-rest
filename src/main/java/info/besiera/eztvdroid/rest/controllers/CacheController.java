@@ -63,7 +63,7 @@ public class CacheController {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	final String baseurl = "https://eztv.ch/";
+	final String baseurl = "http://eztv.it/";
 //	final String baseurl = "http://10.0.0.6:8080/";
 	
 	@Scheduled(fixedRate = 3600000)
@@ -91,7 +91,7 @@ public class CacheController {
 	
 	// every 1 day
 	//@Transactional
-	@Scheduled(fixedRate = 86400000)
+	@Scheduled(fixedRate = 86400000 * 3)
 	public void cacheShows() {
 		final String posterRootURI = "http://besiera.info/tvimg/";
 		System.out.println("Caching Shows...");
@@ -125,7 +125,7 @@ public class CacheController {
 
 		try {
 			Document doc = Jsoup
-					.connect(baseurl + "showlist")
+					.connect(baseurl + "showlist/")
 					.userAgent(
 							"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36")
 					.referrer(
@@ -160,13 +160,13 @@ public class CacheController {
 						info.besiera.eztvdroid.rest.dao.domain.Show _show = showService.find(show.getShowId());
 						if(_show == null) {
 							_show = new info.besiera.eztvdroid.rest.dao.domain.Show();
-							_show.setShowId(show.getShowId());
+							_show.setShowId(Integer.parseInt(showId));
 						}
 						
 						show.setSubscriberCount(subscriptionService.getCount(show.getShowId()));
 						
-						_show.setTitle(show.getTitle());
-						_show.setStatus(show.getStatus());
+						_show.setTitle(title);
+						_show.setStatus(status);
 						showService.saveShow(_show);
 						System.out.print("...saved.");
 						System.out.println("");
@@ -181,7 +181,7 @@ public class CacheController {
 				logger.info("caching shows took " + ((endExec - startExec)/1000) + " secs.");
 			}
 			
-			System.out.println("It took " + (endExec - startExec) + " ms");
+			System.out.println("caching shows took " + ((endExec - startExec)/1000) + " secs.");
 			
 			
 			Gson gson = new Gson();
