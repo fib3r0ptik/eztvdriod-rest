@@ -126,12 +126,7 @@ public class CacheController {
 		try {
 			Document doc = Jsoup
 					.connect(baseurl + "showlist/")
-					.userAgent(
-							"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36")
-					.referrer(
-							"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.ch%2F&ei="
-									+ UUID.randomUUID().toString()
-									+ "&bvm=bv.60983673,d.cGU").get();
+					.userAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36").get();
 			File file = new File(folder.getAbsolutePath() + "/shows.json");
 
 			Elements rows = doc.select("tr[name=hover]");
@@ -230,12 +225,7 @@ public class CacheController {
 				Document doc = null;
 				doc = Jsoup
 						.connect(baseurl + "page_" + page)
-						.userAgent(
-								"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36")
-						.referrer(
-								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.ch%2F&ei="
-										+ UUID.randomUUID().toString()
-										+ "&bvm=bv.60983673,d.cGU")
+						.userAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36")
 						.timeout(15000).get();
 
 
