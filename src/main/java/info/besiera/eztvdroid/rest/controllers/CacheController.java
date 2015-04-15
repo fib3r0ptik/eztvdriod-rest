@@ -63,7 +63,7 @@ public class CacheController {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	final String baseurl = "http://eztv.it/";
+	final String baseurl = "https://eztv.ch/";
 //	final String baseurl = "http://10.0.0.6:8080/";
 	
 	@Scheduled(fixedRate = 3600000)
@@ -126,7 +126,12 @@ public class CacheController {
 		try {
 			Document doc = Jsoup
 					.connect(baseurl + "showlist/")
-					.userAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36").get();
+						.userAgent(
+								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
+						.referrer(
+								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.ch%2F&ei="
+										+ UUID.randomUUID().toString()
+										+ "&bvm=bv.60983673,d.cGU").get();
 			File file = new File(folder.getAbsolutePath() + "/shows.json");
 
 			Elements rows = doc.select("tr[name=hover]");
@@ -225,12 +230,17 @@ public class CacheController {
 				Document doc = null;
 				doc = Jsoup
 						.connect(baseurl + "page_" + page)
-						.userAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36")
+						.userAgent(
+								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
+						.referrer(
+								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.ch%2F&ei="
+										+ UUID.randomUUID().toString()
+										+ "&bvm=bv.60983673,d.cGU")
 						.timeout(15000).get();
 
 
 				Elements rows = doc
-						.select("tr[name=hover]tr.forum_header_border");
+						.select("tr[name=hover]tr.header_brd");
 
 				List<Episode> episodes = util.parseEpisodes(rows,(page == 0 || page == 1));
 				

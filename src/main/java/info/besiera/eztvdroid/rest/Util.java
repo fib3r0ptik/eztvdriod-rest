@@ -127,7 +127,8 @@ public class Util {
 									&& !_href.contains("mininova")
 									&& !_href.contains("download")
 									&& !_href.contains(".tstream")
-									&& !_href.contains("mininova")) {
+									&& !_href.contains("mininova")
+									&& !linkAnchor.attr("title").contains("Download Fast")) {
 								links.add(_href.substring(0, 2).equalsIgnoreCase("//")?"http:"+_href:_href);
 							}
 						}
