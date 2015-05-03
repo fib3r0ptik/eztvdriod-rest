@@ -118,15 +118,7 @@ public class EZTVRESTUtil {
 				Elements linkAnchors = tds.get(2).select("a");
 				for (Element linkAnchor : linkAnchors) {
 					String _href = linkAnchor.attr("href");
-					if ((_href.contains("magnet") || _href
-							.contains(".torrent"))
-							&& !_href.contains("getsecuredfiles")
-							&& !_href.contains("clickdownloader")
-							&& !_href.contains("mininova")
-							&& !_href.contains("download")
-							&& !_href.contains(".tstream")
-							&& !_href.contains("mininova")
-							&& !linkAnchor.attr("title").contains("Download Fast")) {
+					if ((_href.contains("magnet") || (_href.contains(".torrent") && _href.contains("http:")))){
 						links.add(_href.substring(0, 2).equalsIgnoreCase("//")?"http:"+_href:_href);
 					}
 				}
