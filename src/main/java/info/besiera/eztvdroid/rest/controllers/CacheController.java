@@ -1,8 +1,7 @@
 package info.besiera.eztvdroid.rest.controllers;
 
 
-
-import info.besiera.eztvdroid.rest.Util;
+import info.besiera.eztvdroid.rest.EZTVRESTUtil;
 import info.besiera.eztvdroid.rest.dao.domain.Subscription;
 import info.besiera.eztvdroid.rest.dao.services.IShowService;
 import info.besiera.eztvdroid.rest.dao.services.ISubscriptionService;
@@ -49,7 +48,7 @@ import com.squareup.okhttp.Response;
 public class CacheController {
 
 	@Autowired
-	Util util;
+	EZTVRESTUtil util;
 	
 	@Autowired
 	ServletContext servletcontext;
@@ -63,7 +62,7 @@ public class CacheController {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	final String baseurl = "https://eztv.ch/";
+	final String baseurl = "https://eztv.it/";
 //	final String baseurl = "http://10.0.0.6:8080/";
 	
 	@Scheduled(fixedRate = 3600000)
@@ -129,7 +128,7 @@ public class CacheController {
 						.userAgent(
 								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
 						.referrer(
-								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.ch%2F&ei="
+								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.it%2F&ei="
 										+ UUID.randomUUID().toString()
 										+ "&bvm=bv.60983673,d.cGU").get();
 			File file = new File(folder.getAbsolutePath() + "/shows.json");
@@ -140,41 +139,40 @@ public class CacheController {
 			Timer t = new Timer();
 			long startExec = System.currentTimeMillis();
 			t.start();
-			List<Show> shows = rows
-					.stream()
-					.map(row -> {
-						Elements tds = row.select("td");
-						Element anchor = tds.get(1).select("a").get(0);
-						String href = anchor.attr("href");
-						String[] parts = href.split("/");
-						String showId = parts[2];
-						String title = anchor.text().trim();
-						String status = tds.get(2).text().trim();
 
-						Show show = new Show();
-						show.setShowId(Integer.parseInt(showId));
-						show.setStatus(status);
-						show.setTitle(title);
-						show.setPosterUri(posterRootURI + showId + ".jpg");
-						System.out.print("saving " + show.getTitle() + "["+show.getShowId()+"]");
-						info.besiera.eztvdroid.rest.dao.domain.Show _show = showService.find(show.getShowId());
-						if(_show == null) {
-							_show = new info.besiera.eztvdroid.rest.dao.domain.Show();
-							_show.setShowId(Integer.parseInt(showId));
-						}
-						
-						show.setSubscriberCount(subscriptionService.getCount(show.getShowId()));
-						
-						_show.setTitle(title);
-						_show.setStatus(status);
-						showService.saveShow(_show);
-						System.out.print("...saved.");
-						System.out.println("");
+			ArrayList<Show> shows = new ArrayList<Show>();
+			for(Element row: rows){
+				Elements tds = row.select("td");
+				Element anchor = tds.get(1).select("a").get(0);
+				String href = anchor.attr("href");
+				String[] parts = href.split("/");
+				String showId = parts[2];
+				String title = anchor.text().trim();
+				String status = tds.get(2).text().trim();
 
-						return show;
-						
-					}).parallel().collect(Collectors.toList());
-
+				Show show = new Show();
+				show.setShowId(Integer.parseInt(showId));
+				show.setStatus(status);
+				show.setTitle(title);
+				show.setPosterUri(posterRootURI + showId + ".jpg");
+				System.out.print("saving " + show.getTitle() + "["+show.getShowId()+"]");
+				info.besiera.eztvdroid.rest.dao.domain.Show _show = showService.find(show.getShowId());
+				if(_show == null) {
+					_show = new info.besiera.eztvdroid.rest.dao.domain.Show();
+					_show.setShowId(Integer.parseInt(showId));
+				}
+				
+				show.setSubscriberCount(subscriptionService.getCount(show.getShowId()));
+				
+				_show.setTitle(title);
+				_show.setStatus(status);
+				showService.saveShow(_show);
+				System.out.print("...saved.");
+				System.out.println("");
+				shows.add(show);
+			}
+			
+			
 			t.stop();
 			long endExec = System.currentTimeMillis();
 			if(logger != null){
@@ -202,7 +200,6 @@ public class CacheController {
 	
 	
 	@Scheduled(fixedRate = 7200000) //every 2 hours
-	//@Transactional
 	public void cacheLatest() {
 		
 		StringBuilder sqlEmptyLinks = new StringBuilder("Update Show ");
@@ -233,14 +230,14 @@ public class CacheController {
 						.userAgent(
 								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
 						.referrer(
-								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.ch%2F&ei="
+								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.it%2F&ei="
 										+ UUID.randomUUID().toString()
 										+ "&bvm=bv.60983673,d.cGU")
 						.timeout(15000).get();
 
 
 				Elements rows = doc
-						.select("tr[name=hover]tr.header_brd");
+						.select("tr[name=hover]tr.forum_header_border");
 
 				List<Episode> episodes = util.parseEpisodes(rows,(page == 0 || page == 1));
 				
