@@ -1,6 +1,6 @@
 package info.besiera.eztvdroid.rest.controllers;
 
-import info.besiera.eztvdroid.rest.Util;
+import info.besiera.eztvdroid.rest.EZTVRESTUtil;
 import info.besiera.eztvdroid.rest.models.Episode;
 import info.besiera.eztvdroid.rest.models.ResponseTemplate;
 
@@ -37,7 +37,7 @@ import com.google.gson.stream.JsonReader;
 public class SearchController {
 
 	@Autowired
-	Util util;
+	EZTVRESTUtil util;
 
 	@Autowired
 	ServletContext servletcontext;
