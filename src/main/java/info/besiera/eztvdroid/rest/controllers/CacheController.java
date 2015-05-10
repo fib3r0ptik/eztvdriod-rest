@@ -264,7 +264,7 @@ public class CacheController {
 
 		}
 		
-		//GCMPush();
+		GCMPush();
 		
 	}
 	
@@ -339,7 +339,7 @@ public class CacheController {
 			template.setData(data);
 
 			String json = new Gson().toJson(template, GCMRequestTemplate.class);
-			System.out.println("JSON payload for GCM is: " + json);
+			//System.out.println("JSON payload for GCM is: " + json);
 
 			RequestBody body = RequestBody.create(JSON, json);
 			Request request = new Request.Builder()
