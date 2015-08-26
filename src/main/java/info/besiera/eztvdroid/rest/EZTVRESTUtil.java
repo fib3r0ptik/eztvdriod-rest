@@ -1,9 +1,5 @@
 package info.besiera.eztvdroid.rest;
 
-import info.besiera.eztvdroid.rest.dao.services.IShowService;
-import info.besiera.eztvdroid.rest.dao.services.ISubscriptionService;
-import info.besiera.eztvdroid.rest.models.Episode;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,16 +7,17 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import info.besiera.eztvdroid.rest.dao.services.IShowService;
+import info.besiera.eztvdroid.rest.dao.services.ISubscriptionService;
+import info.besiera.eztvdroid.rest.models.Episode;
 
 @Service
 public class EZTVRESTUtil {
@@ -105,8 +102,8 @@ public class EZTVRESTUtil {
 
 				}
 
-				DateTimeFormatter fmt = DateTimeFormat
-						.forPattern("E, dd MMM y HH:mm:ss Z");
+				//DateTimeFormatter fmt = DateTimeFormat
+				//		.forPattern("E, dd MMM y HH:mm:ss Z");
 
 				Episode episode = new Episode();
 				episode.setShow_id(showId);

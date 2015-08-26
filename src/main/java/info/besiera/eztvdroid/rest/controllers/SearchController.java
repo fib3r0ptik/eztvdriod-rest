@@ -60,6 +60,7 @@ public class SearchController {
 			if (!file.exists()) {
 				Document doc = Jsoup
 						.connect("https://eztv.it/search/")
+						.followRedirects(true)
 						.userAgent(
 								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
 						.referrer(
@@ -120,6 +121,7 @@ public class SearchController {
 			if (!file.exists()) {
 				Document doc = Jsoup
 						.connect("https://eztv.it/search/")
+						.followRedirects(true)
 						.userAgent(
 								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
 						.referrer(

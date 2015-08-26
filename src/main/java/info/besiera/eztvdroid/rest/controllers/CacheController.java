@@ -125,6 +125,7 @@ public class CacheController {
 		try {
 			Document doc = Jsoup
 					.connect(baseurl + "showlist/")
+					.followRedirects(true)
 						.userAgent(
 								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
 						.referrer(
@@ -227,6 +228,7 @@ public class CacheController {
 				Document doc = null;
 				doc = Jsoup
 						.connect(baseurl + "page_" + page)
+						.followRedirects(true)
 						.userAgent(
 								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
 						.referrer(
