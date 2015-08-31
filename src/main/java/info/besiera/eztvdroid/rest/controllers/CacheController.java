@@ -62,7 +62,7 @@ public class CacheController {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	final String baseurl = "https://eztv.it/";
+	final String baseurl = "https://eztv.ch/";
 //	final String baseurl = "http://10.0.0.6:8080/";
 	
 	@Scheduled(fixedRate = 3600000)
@@ -264,7 +264,7 @@ public class CacheController {
 
 		}
 		
-		//GCMPush();
+		GCMPush();
 		
 	}
 	

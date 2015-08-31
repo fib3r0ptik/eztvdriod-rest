@@ -59,14 +59,14 @@ public class SearchController {
 		try {
 			if (!file.exists()) {
 				Document doc = Jsoup
-						.connect("https://eztv.it/search/")
+						.connect("https://eztv.ch/search/")
 						.userAgent(
 								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
 						.referrer(
-								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.it%2F&ei="
+								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.ch%2F&ei="
 										+ UUID.randomUUID().toString()
 										+ "&bvm=bv.60983673,d.cGU")
-						.timeout(120000).data("SearchString", showId + "")
+						.timeout(120000).data("SearchString", showId + "").data("search","Search")
 						.post();
 				Elements rows = doc
 						.select("tr[name=hover]tr.forum_header_border");
@@ -119,14 +119,14 @@ public class SearchController {
 		try {
 			if (!file.exists()) {
 				Document doc = Jsoup
-						.connect("https://eztv.it/search/")
+						.connect("https://eztv.ch/search/")
 						.userAgent(
 								"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2")
 						.referrer(
-								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.it%2F&ei="
+								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.ch%2F&ei="
 										+ UUID.randomUUID().toString()
 										+ "&bvm=bv.60983673,d.cGU")
-						.timeout(120000).data("SearchString1", keyword).post();
+						.timeout(120000).data("SearchString1", keyword).data("search","Search").post();
 				Elements rows = doc
 						.select("tr[name=hover]tr.forum_header_border");
 				episodes = util.parseEpisodes(rows, false);
