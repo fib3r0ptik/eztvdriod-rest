@@ -1,15 +1,14 @@
 package info.besiera.eztvdroid.rest.dao.domain;
 
 
-import info.besiera.eztvdroid.rest.dao.interfaces.IShow;
-
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import info.besiera.eztvdroid.rest.dao.interfaces.IShow;
 
 @Repository
 public class ShowDAO implements IShow {

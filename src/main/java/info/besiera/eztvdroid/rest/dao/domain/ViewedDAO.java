@@ -59,6 +59,7 @@ public class ViewedDAO implements IViewed {
 		q.setParameter("season", season);
 		q.setParameter("episode", episode);
 		q.setMaxResults(1);
+		@SuppressWarnings("unchecked")
 		List<Viewed> l = q.list();
 		if(l != null){
 			if(l.size() > 0){
