@@ -201,7 +201,7 @@ public class CacheController {
 	}
 	
 	
-	//@Scheduled(fixedRate = 7200000) //every 2 hours
+	@Scheduled(fixedRate = 7200000) //every 2 hours
 	public void cacheLatest() {
 		
 		StringBuilder sqlEmptyLinks = new StringBuilder("Update Show ");
