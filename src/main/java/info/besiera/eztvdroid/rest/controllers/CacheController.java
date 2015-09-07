@@ -132,6 +132,7 @@ public class CacheController {
 								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.it%2F&ei="
 										+ UUID.randomUUID().toString()
 										+ "&bvm=bv.60983673,d.cGU").data("showlist_thumbs", "false").post();
+			
 			File file = new File(folder.getAbsolutePath() + "/shows.json");
 
 			Elements rows = doc.select("tr[name=hover]");
@@ -144,12 +145,12 @@ public class CacheController {
 			ArrayList<Show> shows = new ArrayList<Show>();
 			for(Element row: rows){
 				Elements tds = row.select("td");
-				Element anchor = tds.get(1).select("a").get(0);
+				Element anchor = tds.get(0).select("a").get(0);
 				String href = anchor.attr("href");
 				String[] parts = href.split("/");
 				String showId = parts[2];
 				String title = anchor.text().trim();
-				String status = tds.get(2).text().trim();
+				String status = tds.get(1).text().trim();
 
 				Show show = new Show();
 				show.setShowId(Integer.parseInt(showId));
@@ -200,7 +201,7 @@ public class CacheController {
 	}
 	
 	
-	@Scheduled(fixedRate = 7200000) //every 2 hours
+	//@Scheduled(fixedRate = 7200000) //every 2 hours
 	public void cacheLatest() {
 		
 		StringBuilder sqlEmptyLinks = new StringBuilder("Update Show ");
@@ -277,6 +278,7 @@ public class CacheController {
 		Timer t = new Timer();
 		long startExec = System.currentTimeMillis();
 		t.start();
+		
 		System.out.println("pushing gcm message");
 
 		StringBuilder sql = new StringBuilder("Select distinct sub from Subscription sub ");
@@ -324,49 +326,69 @@ public class CacheController {
 		}).distinct().parallel().collect(Collectors.toList());
 
 		_subs.removeAll(Collections.singleton(null));
-
+		System.out.println("total items: " + _subs.size());
 		if (_subs.size() > 0) {
 
-			final MediaType JSON = MediaType
-					.parse("application/json; charset=utf-8");
-
-			GCMRequestTemplate template = new GCMRequestTemplate();
-			template.setRegistration_ids(regIds);
-
-			Data data = new Data();
-			Message message = new Message();
-			message.setType("new_episode");
-			message.setData(_subs);
-			data.setMessage(message);
-			template.setData(data);
-
-			String json = new Gson().toJson(template, GCMRequestTemplate.class);
-			//System.out.println("JSON payload for GCM is: " + json);
-
-			RequestBody body = RequestBody.create(JSON, json);
-			Request request = new Request.Builder()
-					.url("https://android.googleapis.com/gcm/send")
-					.addHeader("Authorization",
-							"key=AIzaSyDyIoNp18do2Sxq67YFYpYWkORyYF_GFW0")
-					.post(body).build();
-
-			final OkHttpClient client = new OkHttpClient();
-			try {
-				Response response = client.newCall(request).execute();
-				System.out.println("response is: " + response.body().string());
-			} catch (IOException e) {
-				System.out.println("error push call: " + e.getMessage());
+			int parts = regIds.size() / 1000;
+			int rem = regIds.size() % 1000;
+			
+			for(int i = 1; i <= parts; i++){
+				int start = (i * 1000) - 1000;
+				int end = (i * 1000) - 1;
+				push(regIds.subList(start, end),_subs,startExec);
 			}
 			
-			long endExec = System.currentTimeMillis();
-			System.out.println("It took " + ((endExec - startExec) / 1000)
-					+ " seconds for GCMPUSH");
+			if(rem > 0){
+				int start = (parts * 1000) - 1;
+				int end = ((parts * 1000) - 1) + rem;
+				System.out.println(start + " - " + end);
+				push(regIds.subList(start, end),_subs ,startExec);
+			}
 			
 		}else{
 			System.out.println("No records founds for PUSH");
 		}
+		
+		
 
 
+	}
+	
+	private void push(List<String> regIds, List<String> subs,long startExec){
+		final MediaType JSON = MediaType
+				.parse("application/json; charset=utf-8");
+
+		GCMRequestTemplate template = new GCMRequestTemplate();
+		template.setRegistration_ids(regIds);
+
+		Data data = new Data();
+		Message message = new Message();
+		message.setType("new_episode");
+		message.setData(subs);
+		data.setMessage(message);
+		template.setData(data);
+
+		String json = new Gson().toJson(template, GCMRequestTemplate.class);
+		//System.out.println("JSON payload for GCM is: " + json);
+
+		RequestBody body = RequestBody.create(JSON, json);
+		Request request = new Request.Builder()
+				.url("https://android.googleapis.com/gcm/send")
+				.addHeader("Authorization",
+						"key=AIzaSyDyIoNp18do2Sxq67YFYpYWkORyYF_GFW0")
+				.post(body).build();
+
+		final OkHttpClient client = new OkHttpClient();
+		try {
+			Response response = client.newCall(request).execute();
+			System.out.println("response is: " + response.body().string());
+		} catch (IOException e) {
+			System.out.println("error push call: " + e.getMessage());
+		}
+		
+		long endExec = System.currentTimeMillis();
+		System.out.println("It took " + ((endExec - startExec) / 1000)
+				+ " seconds for GCMPUSH");
 	}
 	
 
