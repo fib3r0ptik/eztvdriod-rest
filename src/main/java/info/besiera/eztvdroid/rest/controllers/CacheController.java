@@ -62,7 +62,7 @@ public class CacheController {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	final String baseurl = "https://eztv.ch/";
+	final String baseurl = "https://eztv.ag/";
 //	final String baseurl = "http://10.0.0.6:8080/";
 	
 	@Scheduled(fixedRate = 3600000)
@@ -131,7 +131,7 @@ public class CacheController {
 						.referrer(
 								"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&ved=0CCcQFjAA&url=http%3A%2F%2Feztv.it%2F&ei="
 										+ UUID.randomUUID().toString()
-										+ "&bvm=bv.60983673,d.cGU").get();
+										+ "&bvm=bv.60983673,d.cGU").data("showlist_thumbs", "false").post();
 			File file = new File(folder.getAbsolutePath() + "/shows.json");
 
 			Elements rows = doc.select("tr[name=hover]");
